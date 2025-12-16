@@ -12,10 +12,19 @@ const inscripcionesRoutes = require('./routes/inscripciones.routes.js');
 const app = express();
 
 // CORS primero
-const allowedOrigins = process.env.CORS_ORIGINS
-  ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
-  : ['http://localhost:5173'];
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+const allowedOrigins = (process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map(s => s.trim())
+  .filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // Postman / healthchecks
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS bloqueado: ${origin}`));
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 // Mongo
