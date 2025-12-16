@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentación API Cursos</title>
+  <style>
+    /* Fuentes y reset ligero */
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f7fc;
+      color: #333;
+      line-height: 1.6;
+      padding: 20px;
+    }
+    main {
+      max-width: 900px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      font-size: 2.2rem;
+      color: #1a73e8;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    h2 {
+      font-size: 1.6rem;
+      color: #1a73e8;
+      margin-top: 40px;
+      margin-bottom: 16px;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 8px;
+    }
+    h3 {
+      font-size: 1.2rem;
+      color: #444;
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+    p {
+      margin-bottom: 20px;
+    }
+    ul {
+      list-style: disc inside;
+      margin-bottom: 20px;
+    }
+    .endpoint {
+      background-color: #f0f4ff;
+      padding: 10px 16px;
+      border-left: 4px solid #1a73e8;
+      border-radius: 4px;
+      margin: 8px 0;
+      font-family: monospace;
+      color: #1a1a1a;
+    }
+    code, pre {
+      background-color: #eef2f7;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    pre {
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+    footer {
+      margin-top: 60px;
+      background: #1a1a1a;
+      color: #ddd;
+      text-align: center;
+      padding: 20px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+    footer p {
+      margin: 6px 0;
+    }
+    a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>📖 Documentación de la API Cursos</h1>
+  <p style="text-align: center;">Esta API gestiona <strong>Usuarios</strong>, <strong>Cursos</strong> e <strong>Inscripciones</strong>.<br>
+  Todas las respuestas son en <code>JSON</code> y se recomienda enviar datos con <code>Content-Type: application/json</code>.</p>
+
+  <main>
+    <section>
+      <h2>👥 Usuarios (<code>/usuarios</code>)</h2>
+      <div class="endpoint">GET /usuarios → Listar todos los usuarios (con filtros)</div>
+      <div class="endpoint">GET /usuarios/:id → Obtener usuario por ID</div>
+      <div class="endpoint">POST /usuarios → Crear un nuevo usuario</div>
+      <div class="endpoint">PUT /usuarios/:id → Actualizar usuario existente</div>
+      <div class="endpoint">DELETE /usuarios/:id → Eliminar usuario</div>
+
+      <h3>Parámetros de filtrado</h3>
+      <ul>
+        <li><code>?tipo=alumno</code> → Solo alumnos</li>
+        <li><code>?tipo=docente</code> → Solo docentes</li>
+        <li><code>?nombre=&lt;texto&gt;</code> → Busca por nombre (parcial, insensible a mayúsculas, soporta espacios)</li>
+        <li>Combinable: <code>?tipo=alumno&nombre=sofia</code></li>
+      </ul>
+
+      <h3>Validaciones</h3>
+      <ul>
+        <li><code>tipo</code> debe ser <code>alumno</code> o <code>docente</code></li>
+        <li>Emails deben ser únicos</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>📚 Cursos (<code>/cursos</code>)</h2>
+      <div class="endpoint">GET /cursos → Listar cursos (con filtros)</div>
+      <div class="endpoint">GET /cursos/:id → Obtener curso por ID</div>
+      <div class="endpoint">POST /cursos → Crear curso</div>
+      <div class="endpoint">PUT /cursos/:id → Actualizar curso</div>
+      <div class="endpoint">DELETE /cursos/:id → Eliminar curso</div>
+
+      <h3>Parámetros de filtrado</h3>
+      <ul>
+        <li><code>?docente=&lt;id&gt;</code> → Filtra por ID de docente</li>
+        <li><code>?docente=&lt;email&gt;</code> → Filtra por email de docente</li>
+        <li><code>?docente=&lt;nombre&gt;</code> → Filtra por nombre de docente</li>
+        <li><code>?nombre=&lt;texto&gt;</code> → Busca por nombre de curso (parcial, insensible a mayúsculas)</li>
+        <li>Combinable: <code>?docente=mariana&nombre=mate</code></li>
+      </ul>
+
+      <h3>Validaciones</h3>
+      <ul>
+        <li><code>docente</code> debe ser un usuario existente con <code>tipo=docente</code></li>
+        <li><code>classCode</code> debe ser único y numérico</li>
+        <li>No se pueden crear más de <strong>15 cursos</strong></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>📝 Inscripciones (<code>/inscripciones</code>)</h2>
+      <div class="endpoint">GET /inscripciones → Listar inscripciones (con filtros)</div>
+      <div class="endpoint">POST /inscripciones → Crear inscripción</div>
+      <div class="endpoint">DELETE /inscripciones/:id → Eliminar inscripción</div>
+
+      <h3>Parámetros de filtrado</h3>
+      <ul>
+        <li><code>?alumno=&lt;id&gt;</code> → Filtra por ID de alumno</li>
+        <li><code>?alumno=&lt;email&gt;</code> → Filtra por email de alumno</li>
+        <li><code>?alumno=&lt;nombre&gt;</code> → Filtra por nombre de alumno</li>
+        <li><code>?curso=&lt;id&gt;</code> → Filtra por ID de curso</li>
+        <li><code>?curso=&lt;classCode&gt;</code> → Filtra por código de curso</li>
+        <li><code>?curso=&lt;nombre&gt;</code> → Filtra por nombre de curso</li>
+        <li><code>?docente=&lt;nombre&gt;</code> → Filtra por nombre del docente asociado</li>
+        <li>Combinable: <code>?alumno=Carla&curso=Historia</code></li>
+      </ul>
+
+      <h3>Validaciones</h3>
+      <ul>
+        <li><code>alumno</code> debe ser un usuario existente con <code>tipo=alumno</code></li>
+        <li><code>curso</code> debe ser un curso existente</li>
+        <li><strong>No se permiten inscripciones duplicadas</strong> (un alumno en el mismo curso)</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>📌 Reglas Generales</h2>
+      <ul>
+        <li>Usar <strong>URL encoding</strong> para nombres con espacios (<code>Sofía%20Martínez</code>)</li>
+        <li>Respuestas en JSON con mensajes de error claros (400, 404, 500)</li>
+        <li>Filtros combinables para refinar resultados</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>Alumno:</strong> Mateo Ciccarello</p>
+    <p><strong>Materia:</strong> Aplicaciones Híbridas</p>
+    <p><strong>Docente:</strong> Jonathan Emanuel Cruz</p>
+    <p><strong>Comisión:</strong> DWM4AP</p>
+  </footer>
+</body>
+</html>
