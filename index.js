@@ -17,10 +17,14 @@ const allowedOrigins = (process.env.CORS_ORIGINS || "")
   .map(s => s.trim())
   .filter(Boolean);
 
+console.log('🔐 CORS_ORIGINS configurado:', allowedOrigins);
+
 app.use(cors({
   origin: (origin, callback) => {
+    console.log('📥 Petición desde origen:', origin);
     if (!origin) return callback(null, true); // Postman / healthchecks
     if (allowedOrigins.includes(origin)) return callback(null, true);
+    console.error('❌ CORS bloqueado:', origin);
     return callback(new Error(`CORS bloqueado: ${origin}`));
   },
   credentials: true
